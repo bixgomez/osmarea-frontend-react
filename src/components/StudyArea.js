@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 const StudyArea = ({ area }) => {
   const [imageUrl, setImageUrl] = useState('');
+  const [maps, setMaps] = useState([]);
 
+  // Fetch the image
   useEffect(() => {
     const fetchImage = async () => {
       const imageLink = area.relationships?.field_area_map_image?.links?.related?.href;
@@ -39,6 +41,36 @@ const StudyArea = ({ area }) => {
     }
   }, [area]);
 
+  // Fetch the related maps
+  useEffect(() => {
+    const fetchMaps = async () => {
+      const mapsLink = area.relationships?.field_maps?.links?.related?.href;
+
+      if (!mapsLink) {
+        console.error('Maps link not found');
+        return;
+      }
+
+      try {
+        const response = await fetch(mapsLink);
+
+        if (!response.ok) {
+          console.error('Error fetching maps data:', response.statusText);
+          return;
+        }
+
+        const data = await response.json();
+        setMaps(data.data); // Assuming maps are returned in data.data
+      } catch (error) {
+        console.error('Error fetching maps:', error);
+      }
+    };
+
+    if (area.relationships?.field_maps?.links?.related?.href) {
+      fetchMaps();
+    }
+  }, [area]);
+
   return (
     <div>
       <h3>{area.attributes.title}</h3>
@@ -47,6 +79,8 @@ const StudyArea = ({ area }) => {
           __html: area.attributes.body?.value || 'No description available',
         }}
       />
+
+      {/* Render the image */}
       {imageUrl && (
         <img
           src={`${process.env.REACT_APP_BASE_URL}${imageUrl}`}
@@ -55,6 +89,16 @@ const StudyArea = ({ area }) => {
           height={area.attributes.field_area_map_image?.data?.meta?.height || 'auto'}
         />
       )}
+
+      {/* Render the related maps */}
+      <h4>Maps</h4>
+      <ul>
+        {maps.map((map) => (
+          <li key={map.id}>
+            {map.attributes?.title || `Map ID: ${map.id}`} {/* Adjust as needed */}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
