@@ -5,19 +5,18 @@ const Home = () => {
   const [studyAreas, setStudyAreas] = useState([]);
 
   useEffect(() => {
-    const fetchAllStudyAreas = async () => {
+    const fetchStudyAreas = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/node/study_area`);
         const data = await response.json();
-        console.log(data); // Log the entire response to inspect the available fields
+        setStudyAreas(data.data);
       } catch (error) {
         console.error('Error fetching study areas:', error);
       }
     };
-  
-    fetchAllStudyAreas();
+
+    fetchStudyAreas();
   }, []);
-  
 
   return (
     <div>
@@ -29,11 +28,11 @@ const Home = () => {
       <ul>
         {studyAreas.map((area) => (
           <li key={area.id}>
-            <Link to={`/study-area/${area.attributes.path.alias.replace(/^\/+/, '')}`}>
-              {area.attributes.title}
-            </Link>
-
-            <Link to={`/study-area${area.attributes.path.alias}`}>
+            {/* Pass the alias in the URL, but pass the UUID in the Link state */}
+            <Link
+              to={`/study-area/${area.attributes.path.alias.replace(/^\/+/, '')}`}
+              state={{ uuid: area.id }}
+            >
               {area.attributes.title}
             </Link>
           </li>
