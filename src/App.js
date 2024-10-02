@@ -16,6 +16,7 @@ const App = () => {
 
         {/* Dynamic route for each study area using the alias */}
         <Route path="/study-area/:alias" element={<StudyAreaDetail />} />
+
       </Routes>
     </Router>
   );
