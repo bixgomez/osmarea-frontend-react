@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import Map from './Map'; // Import the Map component
 
 const StudyArea = ({ area }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [maps, setMaps] = useState([]);
 
-  // Fetch the image
+  // Fetch the image for the study area
   useEffect(() => {
     const fetchImage = async () => {
       const imageLink = area.relationships?.field_area_map_image?.links?.related?.href;
@@ -95,7 +96,8 @@ const StudyArea = ({ area }) => {
       <ul>
         {maps.map((map) => (
           <li key={map.id}>
-            {map.attributes?.title || `Map ID: ${map.id}`} {/* Adjust as needed */}
+            <Map map={map} /> {/* Pass the map object to the Map component */}
+            <p>{map.attributes?.title || `Map ID: ${map.id}`}</p> {/* Show title or fallback to Map ID */}
           </li>
         ))}
       </ul>
