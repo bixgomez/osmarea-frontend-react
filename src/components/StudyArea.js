@@ -1,59 +1,44 @@
 import React, { useEffect, useState } from 'react';
 
 const StudyArea = ({ area }) => {
-  console.log('StudyArea component is rendering, area:', area);
   const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
-    console.log('useEffect is running');
-  
     const fetchImage = async () => {
-      const fieldAreaMapImage = area.relationships?.field_area_map_image;
-      
-      if (!fieldAreaMapImage || !fieldAreaMapImage.links || !fieldAreaMapImage.links.related) {
-        console.error('field_area_map_image or related link not found');
+      const imageLink = area.relationships?.field_area_map_image?.links?.related?.href;
+
+      if (!imageLink) {
+        console.error('Image link not found');
         return;
       }
-      
-      const imageLink = fieldAreaMapImage.links.related.href;
+
       try {
-        console.log('Fetching image from:', imageLink);
         const response = await fetch(imageLink);
-  
+
         if (!response.ok) {
           console.error('Error fetching image data:', response.statusText);
           return;
         }
-  
+
         const data = await response.json();
-  
-        // Add a check to ensure the data object exists
-        if (!data || !data.data) {
-          console.error('No data found in response:', data);
-          return;
-        }
-  
-        console.log('Image data received:', data);
-  
-        const imageUrl = data.data.attributes?.uri?.url;
+        const imageUrl = data?.data?.attributes?.uri?.url;
+
         if (!imageUrl) {
           console.error('Image URL not found in response');
           return;
         }
-  
-        console.log('Image URL:', imageUrl);
+
         setImageUrl(imageUrl);
       } catch (error) {
         console.error('Error fetching image:', error);
       }
     };
-  
-    // Ensure `relationships` and `field_area_map_image` are present before running fetchImage
+
     if (area.relationships?.field_area_map_image?.links?.related?.href) {
       fetchImage();
     }
   }, [area]);
-  
+
   return (
     <div>
       <h3>{area.attributes.title}</h3>
