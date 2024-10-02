@@ -1,12 +1,19 @@
 import React from 'react';
-import StudyAreas from './components/StudyAreas';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import StudyAreasV1 from './StudyAreasV1'; // Import your old App.js as StudyAreasV1
 
 const App = () => {
   return (
-    <div>
-      <h1>Osmarea Frontend React</h1>
-      <StudyAreas />
-    </div>
+    <Router>
+      <Routes>
+        {/* Route for the new main page */}
+        <Route path="/" element={<Home />} />
+
+        {/* Route for the old study areas version 1 page */}
+        <Route path="/study-areas--v01" element={<StudyAreasV1 />} />
+      </Routes>
+    </Router>
   );
 };
 
