@@ -9,6 +9,8 @@ const StudyArea = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [imageUrl, setImageUrl] = useState(''); // Guide map image URL
   const [maps, setMaps] = useState([]); // Related maps
+  const [selectedMap1, setSelectedMap1] = useState(null); // Selected map for first dropdown
+  const [selectedMap2, setSelectedMap2] = useState(null); // Selected map for second dropdown
 
   useEffect(() => {
     const fetchStudyAreaByUUID = async (uuid) => {
@@ -67,7 +69,17 @@ const StudyArea = () => {
           return;
         }
         const data = await response.json();
-        setMaps(data.data); // Assuming maps are returned in data.data
+        const mapsData = data.data;
+
+        setMaps(mapsData); // Set the related maps
+
+        // Set default selections
+        if (mapsData.length > 0) {
+          setSelectedMap1(mapsData[0]); // First map for the first dropdown
+        }
+        if (mapsData.length > 1) {
+          setSelectedMap2(mapsData[1]); // Second map for the second dropdown, if available
+        }
       } catch (error) {
         console.error('Error fetching maps:', error);
       }
@@ -109,15 +121,44 @@ const StudyArea = () => {
         />
       )}
 
-      {/* Related maps */}
-      <ul>
-        {maps.map((map) => (
-          <li key={map.id}>
-            <Map map={map} />
-            <p>{map.attributes?.title || `Map ID: ${map.id}`}</p>
-          </li>
-        ))}
-      </ul>
+      <div>
+        <select
+          value={selectedMap1?.id || ''}
+          onChange={(e) => setSelectedMap1(maps.find(map => map.id === e.target.value))}
+        >
+          {maps.map((map) => (
+            <option key={map.id} value={map.id}>
+              {map.attributes?.title || `Map ID: ${map.id}`}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <select
+          value={selectedMap2?.id || ''}
+          onChange={(e) => setSelectedMap2(maps.find(map => map.id === e.target.value))}
+        >
+          {maps.map((map) => (
+            <option key={map.id} value={map.id}>
+              {map.attributes?.title || `Map ID: ${map.id}`}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {selectedMap1 && (
+        <div>
+          <Map map={selectedMap1} />
+        </div>
+      )}
+
+      {selectedMap2 && (
+        <div>
+          <Map map={selectedMap2} />
+        </div>
+      )}
+
     </div>
   );
 };
