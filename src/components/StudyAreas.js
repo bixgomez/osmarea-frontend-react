@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import StudyArea from './StudyArea'; // Import the StudyArea component
+import StudyArea from './StudyAreaLink'; // Import the StudyArea component
 
 const StudyAreas = () => {
   const [studyAreas, setStudyAreas] = useState([]);
