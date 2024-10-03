@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import Map from './Map'; // Import the Map component to display individual maps
 
-const StudyAreaDetail = () => {
+const StudyArea = () => {
   const { alias } = useParams(); // Alias from the URL
   const location = useLocation(); // Access location to get the state
   const [studyArea, setStudyArea] = useState(null); // Study area data
@@ -122,4 +122,4 @@ const StudyAreaDetail = () => {
   );
 };
 
-export default StudyAreaDetail;
+export default StudyArea;
