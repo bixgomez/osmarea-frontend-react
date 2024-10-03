@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import Map from './Map'; // Import the Map component to display individual maps
+import Map from './Map'; // Import the Map component
 
 const StudyArea = () => {
   const { alias } = useParams(); // Alias from the URL
@@ -15,7 +15,6 @@ const StudyArea = () => {
   useEffect(() => {
     const fetchStudyAreaByUUID = async (uuid) => {
       try {
-        // Fetch the study area by its UUID (or another identifier)
         const response = await fetch(`${process.env.REACT_APP_API_URL}/node/study_area/${uuid}`);
         const data = await response.json();
 
@@ -85,7 +84,6 @@ const StudyArea = () => {
       }
     };
 
-    // Get the UUID from state, which was passed via Link
     if (location.state && location.state.uuid) {
       fetchStudyAreaByUUID(location.state.uuid); // Fetch study area by UUID
     } else {
@@ -149,13 +147,15 @@ const StudyArea = () => {
 
       {selectedMap1 && (
         <div>
-          <Map map={selectedMap1} />
+          {/* Only show the image, no title or description */}
+          <Map map={selectedMap1} showTitle={false} showDescription={false} />
         </div>
       )}
 
       {selectedMap2 && (
         <div>
-          <Map map={selectedMap2} />
+          {/* Show the image and title, but no description */}
+          <Map map={selectedMap2} showTitle={false} showDescription={false} />
         </div>
       )}
 

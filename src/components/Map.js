@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Map = ({ map }) => {
+const Map = ({ map, showTitle = false, showDescription = false, showImage = true }) => {
   const [mapImageUrl, setMapImageUrl] = useState('');
 
   useEffect(() => {
@@ -41,14 +41,19 @@ const Map = ({ map }) => {
 
   return (
     <div>
-      <h5>{map.attributes?.title || `Map ID: ${map.id}`}</h5>
-      {mapImageUrl && (
+      {showTitle && <h5>{map.attributes?.title || `Map ID: ${map.id}`}</h5>}
+      
+      {showImage && mapImageUrl && (
         <img
           src={`${process.env.REACT_APP_BASE_URL}${mapImageUrl}`}
           alt={map.attributes?.title || 'Map Image'}
           width={map.attributes?.field_map_image?.meta?.width || 'auto'}
           height={map.attributes?.field_map_image?.meta?.height || 'auto'}
         />
+      )}
+
+      {showDescription && map.attributes?.description && (
+        <p>{map.attributes.description}</p>
       )}
     </div>
   );
